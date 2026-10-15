@@ -1,6 +1,6 @@
 # STRUCTURE.md — backend
 
-API Node.js + TypeScript (Express 5, Mongoose, Zod, JWT) do portfólio. O MongoDB roda via Docker (`docker-compose.yml` na raiz).
+API Node.js + TypeScript (Express 5, Mongoose, Zod, JWT) do portfólio. O MongoDB e o RustFS (S3) rodam via Docker (`docker-compose.yml` na raiz; copie `.env.example` para `.env`).
 
 ## Comandos
 - `npm run dev` — servidor com recarga automática (tsx).
@@ -11,7 +11,7 @@ API Node.js + TypeScript (Express 5, Mongoose, Zod, JWT) do portfólio. O MongoD
 ## Estrutura
 - `src/index.ts` — inicialização: valida ambiente, conecta ao banco, sobe o servidor.
 - `src/app.ts` — monta o Express (middlewares globais e rotas); sem efeitos colaterais, usado nos testes.
-- `src/config/env.ts` — leitura e validação (Zod) das variáveis de ambiente; o `.env` fica na raiz do repo.
+- `src/config/env.ts` — leitura e validação (Zod) das variáveis de ambiente; o `.env` fica na raiz do projeto.
 - `src/config/banco.ts` — conexão com o MongoDB.
 - `src/modelos/` — modelos Mongoose: `Projeto`, `Experiencia`, `Habilidade` (+ `comum.ts` com opções de serialização).
 - `src/esquemas/` — esquemas Zod de entrada (`conteudo.ts`, `autenticacao.ts`).

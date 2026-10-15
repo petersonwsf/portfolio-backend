@@ -2,8 +2,8 @@ import path from 'node:path'
 import dotenv from 'dotenv'
 import { z } from 'zod'
 
-// o .env fica na raiz do repositório (compartilhado com o docker-compose)
-dotenv.config({ path: path.resolve(__dirname, '..', '..', '..', '.env') })
+// o .env fica na raiz do projeto (ao lado do docker-compose.yml)
+dotenv.config({ path: path.resolve(__dirname, '..', '..', '.env') })
 
 const esquemaEnv = z.object({
     PORTA: z.coerce.number().int().positive().default(3333),

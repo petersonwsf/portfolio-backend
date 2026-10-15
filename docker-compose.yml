@@ -1,0 +1,46 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: portfolio-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USUARIO}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_SENHA}
+      MONGO_INITDB_DATABASE: ${MONGO_BANCO}
+    volumes:
+      - portfolio-mongo-dados:/data/db
+
+  # ajusta o dono do volume (o RustFS roda como UID 10001)
+  rustfs-permissoes:
+    image: alpine:3.20
+    user: root
+    command: chown -R 10001:10001 /data
+    volumes:
+      - portfolio-rustfs-dados:/data
+
+  # armazenamento de imagens compatível com S3 (API na 9000, console na 9001)
+  rustfs:
+    image: rustfs/rustfs:1.0.1
+    container_name: portfolio-rustfs
+    restart: unless-stopped
+    depends_on:
+      rustfs-permissoes:
+        condition: service_completed_successfully
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    command: /data
+    environment:
+      RUSTFS_ACCESS_KEY: ${S3_ACCESS_KEY}
+      RUSTFS_SECRET_KEY: ${S3_SECRET_KEY}
+      RUSTFS_ADDRESS: ":9000"
+      RUSTFS_CONSOLE_ADDRESS: ":9001"
+      RUSTFS_CONSOLE_ENABLE: "true"
+    volumes:
+      - portfolio-rustfs-dados:/data
+
+volumes:
+  portfolio-mongo-dados:
+  portfolio-rustfs-dados:
