@@ -2,17 +2,17 @@ import cors from 'cors'
 import express, { type Express } from 'express'
 import helmet from 'helmet'
 import type { Ambiente } from './config/env'
-import { esquemaExperiencia, esquemaProjeto } from './esquemas/conteudo'
+import { esquemaExperiencia, esquemaHabilidade, esquemaProjeto } from './esquemas/conteudo'
 import { criarAutenticacao } from './middlewares/autenticar'
 import { rotaNaoEncontrada, tratarErros } from './middlewares/tratarErros'
 import { Experiencia } from './modelos/Experiencia'
+import { Habilidade } from './modelos/Habilidade'
 import { Projeto } from './modelos/Projeto'
 import { criarRotasAutenticacao } from './rotas/autenticacao'
 import { criarRotasCrud } from './rotas/criarRotasCrud'
-import { criarRotasHabilidades } from './rotas/habilidades'
 import { criarRotasUploads } from './rotas/uploads'
 import type { Armazenamento } from './servicos/armazenamento'
-import { validarTecnologiasDominadas } from './utils/tecnologias'
+import { validarTecnologiasCadastradas } from './utils/tecnologias'
 
 const POPULAR_TECNOLOGIAS = { caminho: 'tecnologias', selecionar: 'nome categoria imagem' }
 
@@ -42,7 +42,7 @@ export function criarApp(ambiente: Ambiente, armazenamento: Armazenamento): Expr
             nomeSingular: 'Projeto',
             autenticar,
             popular: POPULAR_TECNOLOGIAS,
-            validarExtra: validarTecnologiasDominadas,
+            validarExtra: validarTecnologiasCadastradas,
         })
     )
     app.use(
@@ -53,10 +53,13 @@ export function criarApp(ambiente: Ambiente, armazenamento: Armazenamento): Expr
             nomeSingular: 'Experiência',
             autenticar,
             popular: POPULAR_TECNOLOGIAS,
-            validarExtra: validarTecnologiasDominadas,
+            validarExtra: validarTecnologiasCadastradas,
         })
     )
-    app.use('/api/habilidades', criarRotasHabilidades(autenticar))
+    app.use(
+        '/api/habilidades',
+        criarRotasCrud({ modelo: Habilidade, esquema: esquemaHabilidade, nomeSingular: 'Habilidade', autenticar })
+    )
 
     app.use(rotaNaoEncontrada)
     app.use(tratarErros)

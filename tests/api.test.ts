@@ -113,8 +113,7 @@ describe('proteção das rotas de escrita', () => {
         ['PUT', '/api/projetos/64b64b64b64b64b64b64b64b'],
         ['DELETE', '/api/experiencias/64b64b64b64b64b64b64b64b'],
         ['POST', '/api/habilidades'],
-        ['GET', '/api/habilidades/catalogo'],
-        ['PATCH', '/api/habilidades/64b64b64b64b64b64b64b64b/dominada'],
+        ['DELETE', '/api/habilidades/64b64b64b64b64b64b64b64b'],
     ])('exige autenticação em %s %s', async (metodo, caminho) => {
         const { status } = await requisitar(caminho, { method: metodo, body: metodo === 'GET' ? undefined : '{}' })
         expect(status).toBe(401)
@@ -164,12 +163,12 @@ describe('validação de entrada (admin autenticado)', () => {
         expect(status).toBe(400)
     })
 
-    it('exige booleano ao marcar habilidade como dominada', async () => {
+    it('exige nível válido na habilidade', async () => {
         const token = await entrar()
-        const { status } = await requisitar('/api/habilidades/64b64b64b64b64b64b64b64b/dominada', {
-            method: 'PATCH',
+        const { status } = await requisitar('/api/habilidades', {
+            method: 'POST',
             token,
-            body: JSON.stringify({ dominada: 'sim' }),
+            body: JSON.stringify({ nome: 'Linux', categoria: 'DevOps', nivel: 'Mestre' }),
         })
         expect(status).toBe(400)
     })

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { CATEGORIAS_HABILIDADE } from '../modelos/Habilidade'
+import { CATEGORIAS_HABILIDADE, NIVEIS_HABILIDADE } from '../modelos/Habilidade'
 
 const textoObrigatorio = (campo: string) => z.string().trim().min(1, `${campo} é obrigatório`).max(5000)
 const urlOpcional = z.union([z.url('URL inválida'), z.literal('')]).optional()
@@ -38,6 +38,6 @@ export const esquemaHabilidade = z.object({
     nome: textoObrigatorio('Nome').max(80),
     categoria: z.enum(CATEGORIAS_HABILIDADE),
     imagem: z.string().trim().max(2000).optional(),
-    dominada: z.boolean().default(false),
+    nivel: z.enum(NIVEIS_HABILIDADE),
     ordem,
 })
