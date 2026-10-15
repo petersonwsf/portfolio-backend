@@ -6,4 +6,6 @@ services:
     restart: unless-stopped
     env_file: .env
     ports:
-      - "3333:3333"
+      # publicado só em localhost: o Caddy da VPS faz o reverse_proxy para esta porta.
+      # (se o seu Caddy roda em container, troque por uma rede Docker compartilhada)
+      - "127.0.0.1:3333:3333"
