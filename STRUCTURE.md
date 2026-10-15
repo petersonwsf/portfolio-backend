@@ -34,3 +34,8 @@ API Node.js + TypeScript (Express 5, Mongoose, Zod, JWT) do portfólio. O MongoD
 | POST | `/uploads` | admin — multipart (`arquivo`, `pasta`), retorna `{ url }` |
 
 Projetos e experiências guardam `tecnologias` como referências a habilidades **cadastradas** (respostas trazem `{ id, nome, categoria, imagem }`).
+
+## Deploy
+- `Dockerfile` — build multi-stage (TypeScript → `dist`, dependências de produção) e execução como usuário não-root; as variáveis de ambiente são fornecidas pelo container.
+- `.github/workflows/deploy.yml` — CD: build, push no GHCR e atualização do container na VPS por SSH.
+- `deploy/` — `docker-compose.yml` de exemplo para a VPS e `LEIAME.md` com os secrets necessários.

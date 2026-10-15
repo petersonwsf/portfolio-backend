@@ -1,0 +1,9 @@
+# Exemplo para o diretório de deploy na VPS (o workflow executa `docker compose pull && up -d` aqui).
+services:
+  backend:
+    image: ghcr.io/<usuario>/<repositorio-backend>:latest
+    container_name: portfolio-backend
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "3333:3333"
