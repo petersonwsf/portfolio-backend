@@ -1,4 +1,4 @@
-import { model, Schema } from 'mongoose'
+import { model, Schema, type Types } from 'mongoose'
 import { opcoesEsquema } from './comum'
 
 export interface IProjeto {
@@ -6,7 +6,7 @@ export interface IProjeto {
     categoria: string
     ano: number
     descricao: string
-    tecnologias: string[]
+    tecnologias: Types.ObjectId[]
     imagens: string[]
     urlCodigo?: string
     urlPagina?: string
@@ -19,7 +19,7 @@ const esquemaProjeto = new Schema<IProjeto>(
         categoria: { type: String, required: true, trim: true },
         ano: { type: Number, required: true },
         descricao: { type: String, required: true },
-        tecnologias: { type: [String], default: [] },
+        tecnologias: { type: [{ type: Schema.Types.ObjectId, ref: 'Habilidade' }], default: [] },
         imagens: { type: [String], default: [] },
         urlCodigo: { type: String, trim: true },
         urlPagina: { type: String, trim: true },

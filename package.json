@@ -9,10 +9,12 @@
     "start": "node dist/index.js",
     "test": "vitest run",
     "lint": "tsc --noEmit",
-    "gerar-hash": "tsx src/scripts/gerarHash.ts"
+    "gerar-hash": "tsx src/scripts/gerarHash.ts",
+    "semear": "tsx src/scripts/semear.ts"
   },
   "type": "commonjs",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1152.0",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^18.0.8",
@@ -20,12 +22,14 @@
     "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.11.2",
+    "multer": "^2.4.0",
     "zod": "^4.6.7"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.3.0",
     "@types/node": "^26.6.5",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",

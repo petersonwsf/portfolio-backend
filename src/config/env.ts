@@ -13,6 +13,12 @@ const esquemaEnv = z.object({
     ADMIN_SENHA_HASH: z.string().min(20, 'ADMIN_SENHA_HASH é obrigatório (bcrypt)'),
     JWT_SEGREDO: z.string().min(32, 'JWT_SEGREDO deve ter ao menos 32 caracteres'),
     JWT_EXPIRA_EM: z.string().default('2h'),
+    S3_ENDPOINT: z.url('S3_ENDPOINT deve ser uma URL'),
+    S3_REGIAO: z.string().default('us-east-1'),
+    S3_ACCESS_KEY: z.string().min(1, 'S3_ACCESS_KEY é obrigatória'),
+    S3_SECRET_KEY: z.string().min(1, 'S3_SECRET_KEY é obrigatória'),
+    S3_BUCKET: z.string().min(3, 'S3_BUCKET é obrigatório'),
+    S3_URL_PUBLICA: z.url('S3_URL_PUBLICA deve ser uma URL'),
 })
 
 export type Ambiente = z.infer<typeof esquemaEnv>

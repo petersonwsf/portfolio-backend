@@ -8,14 +8,16 @@ export interface IHabilidade {
     nome: string
     categoria: CategoriaHabilidade
     imagem?: string
+    dominada: boolean
     ordem: number
 }
 
 const esquemaHabilidade = new Schema<IHabilidade>(
     {
-        nome: { type: String, required: true, trim: true },
+        nome: { type: String, required: true, trim: true, unique: true },
         categoria: { type: String, enum: CATEGORIAS_HABILIDADE, required: true },
         imagem: { type: String, trim: true },
+        dominada: { type: Boolean, default: false, index: true },
         ordem: { type: Number, default: 0 },
     },
     opcoesEsquema
