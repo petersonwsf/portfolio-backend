@@ -1,7 +1,7 @@
-# Exemplo para o diretório de deploy na VPS (o workflow executa `docker compose pull && up -d` aqui).
+# Exemplo para o diretório de deploy na VPS (o workflow executa `docker compose pull <serviço> && up -d <serviço>` aqui; a tag é o nome da branch).
 services:
   backend:
-    image: ghcr.io/<usuario>/<repositorio-backend>:latest
+    image: ghcr.io/<usuario>/<repositorio-backend>:main
     container_name: portfolio-backend
     restart: unless-stopped
     env_file: .env
