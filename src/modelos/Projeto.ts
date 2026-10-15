@@ -10,7 +10,6 @@ export interface IProjeto {
     imagens: string[]
     urlCodigo?: string
     urlPagina?: string
-    ordem: number
 }
 
 const esquemaProjeto = new Schema<IProjeto>(
@@ -23,7 +22,6 @@ const esquemaProjeto = new Schema<IProjeto>(
         imagens: { type: [String], default: [] },
         urlCodigo: { type: String, trim: true },
         urlPagina: { type: String, trim: true },
-        ordem: { type: Number, default: 0 },
     },
     opcoesEsquema
 )

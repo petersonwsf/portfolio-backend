@@ -52,7 +52,7 @@ export function criarRotasCrud<T>({
     }
 
     roteador.get('/', async (_req, res) => {
-        const consulta = modelo.find(filtroListagem).sort({ ordem: 1, createdAt: 1 })
+        const consulta = modelo.find(filtroListagem).sort({ createdAt: 1 })
         if (popular) consulta.populate(popular.caminho, popular.selecionar)
         res.json(await consulta)
     })

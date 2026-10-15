@@ -12,7 +12,6 @@ export interface IHabilidade {
     categoria: CategoriaHabilidade
     imagem?: string
     nivel: NivelHabilidade
-    ordem: number
 }
 
 const esquemaHabilidade = new Schema<IHabilidade>(
@@ -21,7 +20,6 @@ const esquemaHabilidade = new Schema<IHabilidade>(
         categoria: { type: String, enum: CATEGORIAS_HABILIDADE, required: true },
         imagem: { type: String, trim: true },
         nivel: { type: String, enum: NIVEIS_HABILIDADE, required: true },
-        ordem: { type: Number, default: 0 },
     },
     opcoesEsquema
 )

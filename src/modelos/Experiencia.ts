@@ -9,7 +9,6 @@ export interface IExperiencia {
     dataFim?: Date | null
     imagem?: string
     tecnologias: Types.ObjectId[]
-    ordem: number
 }
 
 const esquemaExperiencia = new Schema<IExperiencia>(
@@ -21,7 +20,6 @@ const esquemaExperiencia = new Schema<IExperiencia>(
         dataFim: { type: Date },
         imagem: { type: String, trim: true },
         tecnologias: { type: [{ type: Schema.Types.ObjectId, ref: 'Habilidade' }], default: [] },
-        ordem: { type: Number, default: 0 },
     },
     opcoesEsquema
 )

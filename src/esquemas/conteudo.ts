@@ -4,7 +4,6 @@ import { CATEGORIAS_HABILIDADE, NIVEIS_HABILIDADE } from '../modelos/Habilidade'
 const textoObrigatorio = (campo: string) => z.string().trim().min(1, `${campo} é obrigatório`).max(5000)
 const urlOpcional = z.union([z.url('URL inválida'), z.literal('')]).optional()
 const listaDeIds = z.array(z.string().regex(/^[a-f0-9]{24}$/i, 'Identificador inválido')).max(50).default([])
-const ordem = z.number().int().min(0).default(0)
 
 export const esquemaProjeto = z.object({
     nome: textoObrigatorio('Nome').max(120),
@@ -15,7 +14,6 @@ export const esquemaProjeto = z.object({
     imagens: z.array(z.string().trim().min(1).max(2000)).max(30).default([]),
     urlCodigo: urlOpcional,
     urlPagina: urlOpcional,
-    ordem,
 })
 
 export const esquemaExperiencia = z
@@ -27,8 +25,7 @@ export const esquemaExperiencia = z
         dataFim: z.union([z.null(), z.coerce.date()]).optional(),
         imagem: z.string().trim().max(2000).optional(),
         tecnologias: listaDeIds,
-        ordem,
-    })
+        })
     .refine((dados) => !dados.dataFim || dados.dataFim >= dados.dataInicio, {
         message: 'A data de fim não pode ser anterior à data de início',
         path: ['dataFim'],
@@ -39,5 +36,4 @@ export const esquemaHabilidade = z.object({
     categoria: z.enum(CATEGORIAS_HABILIDADE),
     imagem: z.string().trim().max(2000).optional(),
     nivel: z.enum(NIVEIS_HABILIDADE),
-    ordem,
 })
