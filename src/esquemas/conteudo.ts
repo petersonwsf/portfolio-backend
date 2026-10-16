@@ -18,6 +18,7 @@ export const esquemaProjeto = z.object({
 
 export const esquemaExperiencia = z
     .object({
+        categoria: textoObrigatorio('Categoria').max(60),
         empresa: textoObrigatorio('Empresa').max(120),
         cargo: textoObrigatorio('Cargo').max(120),
         descricao: textoObrigatorio('Descrição'),

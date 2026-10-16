@@ -6,6 +6,7 @@ API Node.js + TypeScript (Express 5, Mongoose, Zod, JWT) do portfólio. O MongoD
 - `npm run dev` — servidor com recarga automática (tsx).
 - `npm run build` / `npm start` — compila para `dist/` e executa.
 - `npm test` — testes (vitest). `npm run lint` — checagem de tipos (`tsc --noEmit`).
+- `npm run dados-teste` — insere dados fictícios (habilidades, projetos, experiências) no MongoDB **local**; `-- --limpar` remove só o que ele criou.
 - `npm run gerar-hash -- "senha"` — gera o `ADMIN_SENHA_HASH` (bcrypt) para o `.env`.
 
 ## Estrutura
@@ -19,6 +20,7 @@ API Node.js + TypeScript (Express 5, Mongoose, Zod, JWT) do portfólio. O MongoD
 - `src/middlewares/` — `autenticar` (JWT), `validar` (corpo com Zod), `limitarTentativas` (login), `tratarErros`.
 - `src/utils/` — `erros.ts` (`ErroHttp`), `imagem.ts` (detecção de PNG/JPEG/GIF/WebP pelos bytes), `tecnologias.ts` (valida tecnologias cadastradas).
 - `src/servicos/armazenamento.ts` — cliente S3 (RustFS): envia imagens, cria o bucket e libera leitura pública dos objetos.
+- `src/scripts/dadosTeste.ts` — dados fictícios para testes locais (marcados com `seed-teste` na imagem; recusa bancos não locais).
 - `src/scripts/gerarHash.ts` — utilitário para gerar o hash da senha do admin.
 - `tests/` — testes da API (autenticação, proteção das rotas, validação).
 

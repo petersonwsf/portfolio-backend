@@ -2,6 +2,7 @@ import { model, Schema, type Types } from 'mongoose'
 import { opcoesEsquema } from './comum'
 
 export interface IExperiencia {
+    categoria: string
     empresa: string
     cargo: string
     descricao: string
@@ -13,6 +14,7 @@ export interface IExperiencia {
 
 const esquemaExperiencia = new Schema<IExperiencia>(
     {
+        categoria: { type: String, required: true, trim: true },
         empresa: { type: String, required: true, trim: true },
         cargo: { type: String, required: true, trim: true },
         descricao: { type: String, required: true },
