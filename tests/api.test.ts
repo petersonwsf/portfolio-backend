@@ -114,6 +114,9 @@ describe('proteção das rotas de escrita', () => {
         ['DELETE', '/api/experiencias/64b64b64b64b64b64b64b64b'],
         ['POST', '/api/habilidades'],
         ['DELETE', '/api/habilidades/64b64b64b64b64b64b64b64b'],
+        ['GET', '/api/mensagens'],
+        ['PATCH', '/api/mensagens/64b64b64b64b64b64b64b64b'],
+        ['DELETE', '/api/mensagens/64b64b64b64b64b64b64b64b'],
     ])('exige autenticação em %s %s', async (metodo, caminho) => {
         const { status } = await requisitar(caminho, { method: metodo, body: metodo === 'GET' ? undefined : '{}' })
         expect(status).toBe(401)
@@ -206,5 +209,16 @@ describe('upload de imagens', () => {
         const token = await entrar()
         const { status } = await enviarArquivo(PNG, '../fora', token)
         expect(status).toBe(400)
+    })
+})
+
+describe('formulário de contato', () => {
+    it('valida os dados enviados', async () => {
+        const { status, corpo } = await requisitar('/api/contato', {
+            method: 'POST',
+            body: JSON.stringify({ nome: 'A', email: 'invalido', assunto: 'x\ny', mensagem: 'curta' }),
+        })
+        expect(status).toBe(400)
+        expect(Array.isArray(corpo?.detalhes)).toBe(true)
     })
 })

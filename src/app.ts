@@ -9,15 +9,22 @@ import { Experiencia } from './modelos/Experiencia'
 import { Habilidade } from './modelos/Habilidade'
 import { Projeto } from './modelos/Projeto'
 import { criarRotasAutenticacao } from './rotas/autenticacao'
+import { criarRotasContato } from './rotas/contato'
 import { criarRotasCrud } from './rotas/criarRotasCrud'
+import { criarRotasMensagens } from './rotas/mensagens'
 import { criarRotasUploads } from './rotas/uploads'
 import type { Armazenamento } from './servicos/armazenamento'
+import type { ProvedorEmail } from './servicos/email/ProvedorEmail'
 import { validarTecnologiasCadastradas } from './utils/tecnologias'
 
 const POPULAR_TECNOLOGIAS = { caminho: 'tecnologias', selecionar: 'nome categoria imagem' }
 
 /** Monta a aplicação Express (sem conectar ao banco nem abrir porta, para facilitar testes). */
-export function criarApp(ambiente: Ambiente, armazenamento: Armazenamento): Express {
+export function criarApp(
+    ambiente: Ambiente,
+    armazenamento: Armazenamento,
+    provedorEmail: ProvedorEmail | null = null
+): Express {
     const app = express()
     const autenticar = criarAutenticacao(ambiente.JWT_SEGREDO)
     const origens = ambiente.ORIGENS_PERMITIDAS.split(',').map((origem) => origem.trim())
@@ -33,7 +40,9 @@ export function criarApp(ambiente: Ambiente, armazenamento: Armazenamento): Expr
     })
 
     app.use('/api/autenticacao', criarRotasAutenticacao(ambiente))
-    app.use('/api/uploads', criarRotasUploads(armazenamento, autenticar))
+    app.use('/api/contato', criarRotasContato({ provedorEmail, emailDestino: ambiente.EMAIL_DESTINO }))
+    app.use('/api/mensagens', criarRotasMensagens(autenticar))
+    app.use('/api/uploads',criarRotasUploads(armazenamento, autenticar))
     app.use(
         '/api/projetos',
         criarRotasCrud({

@@ -2,6 +2,8 @@ import { criarApp } from './app'
 import { conectarBanco } from './config/banco'
 import { carregarAmbiente } from './config/env'
 import { criarArmazenamentoS3 } from './servicos/armazenamento'
+import { criarProvedorEmail } from './servicos/email/criarProvedorEmail'
+import type { ProvedorEmail } from './servicos/email/ProvedorEmail'
 
 async function iniciar(): Promise<void> {
     const ambiente = carregarAmbiente()
@@ -18,7 +20,15 @@ async function iniciar(): Promise<void> {
         )
     }
 
-    const app = criarApp(ambiente, armazenamento)
+    let provedorEmail: ProvedorEmail | null = null
+    try {
+        provedorEmail = criarProvedorEmail(ambiente)
+    } catch (erro) {
+        // a API continua no ar; as mensagens de contato ficam salvas, mas sem aviso por e-mail
+        console.warn('Aviso: envio de e-mail desativado.', erro instanceof Error ? erro.message : erro)
+    }
+
+    const app = criarApp(ambiente, armazenamento, provedorEmail)
     app.listen(ambiente.PORTA, () => {
         console.log(`API do portfólio em execução na porta ${ambiente.PORTA}`)
     })

@@ -19,6 +19,19 @@ const esquemaEnv = z.object({
     S3_SECRET_KEY: z.string().min(1, 'S3_SECRET_KEY é obrigatória'),
     S3_BUCKET: z.string().min(3, 'S3_BUCKET é obrigatório'),
     S3_URL_PUBLICA: z.url('S3_URL_PUBLICA deve ser uma URL'),
+    // e-mail do formulário de contato (opcionais: sem SMTP, as mensagens só ficam salvas no banco)
+    EMAIL_PROVEDOR: z.enum(['resend', 'smtp']).default('resend'),
+    RESEND_API_KEY: z.string().min(1).optional(),
+    EMAIL_DESTINO: z.email('EMAIL_DESTINO deve ser um e-mail').optional(),
+    EMAIL_REMETENTE: z.string().min(3).optional(),
+    SMTP_HOST: z.string().min(1).optional(),
+    SMTP_PORTA: z.coerce.number().int().positive().default(587),
+    SMTP_SEGURO: z
+        .enum(['true', 'false'])
+        .default('false')
+        .transform((valor) => valor === 'true'),
+    SMTP_USUARIO: z.string().min(1).optional(),
+    SMTP_SENHA: z.string().min(1).optional(),
 })
 
 export type Ambiente = z.infer<typeof esquemaEnv>
