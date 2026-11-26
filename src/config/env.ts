@@ -39,6 +39,8 @@ const esquemaEnv = z.object({
     // serviço central de auditoria (opcionais: sem eles a aba Auditoria responde 503)
     AUDITORIA_URL: vazioComoAusente(z.url('AUDITORIA_URL deve ser uma URL').optional()),
     AUDITORIA_TOKEN_LEITURA: vazioComoAusente(z.string().min(32, 'AUDITORIA_TOKEN_LEITURA deve ter ao menos 32 caracteres').optional()),
+    // token de ADMINISTRAÇÃO (cadastro de aplicações e chaves de API); opcional: sem ele a gestão de chaves responde 503
+    AUDITORIA_TOKEN_ADMIN: vazioComoAusente(z.string().min(32, 'AUDITORIA_TOKEN_ADMIN deve ter ao menos 32 caracteres').optional()),
 })
 
 export type Ambiente = z.infer<typeof esquemaEnv>

@@ -1,6 +1,7 @@
 import { type RequestHandler, Router } from 'express'
 import { esquemaConsultaEventos } from '../esquemas/auditoria'
 import { Projeto } from '../modelos/Projeto'
+import type { ClienteAdminAuditoria } from '../servicos/administracaoAuditoria'
 import type { ClienteAuditoria } from '../servicos/auditoria'
 import { ErroHttp } from '../utils/erros'
 
@@ -14,6 +15,8 @@ export type BuscarProjeto = (id: string) => Promise<ProjetoParaAuditoria | null>
 export interface DependenciasAuditoria {
     /** `null` quando o serviço de auditoria não está configurado (AUDITORIA_URL e AUDITORIA_TOKEN_LEITURA). */
     cliente: ClienteAuditoria | null
+    /** `null` sem AUDITORIA_URL e AUDITORIA_TOKEN_ADMIN: a gestão de chaves responde 503. */
+    admin?: ClienteAdminAuditoria | null
     /** Injetável nos testes; por padrão lê o projeto no MongoDB. */
     buscarProjeto?: BuscarProjeto
 }

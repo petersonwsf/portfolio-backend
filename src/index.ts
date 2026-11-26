@@ -2,6 +2,7 @@ import { criarApp } from './app'
 import { conectarBanco } from './config/banco'
 import { carregarAmbiente } from './config/env'
 import { criarArmazenamentoS3 } from './servicos/armazenamento'
+import { criarClienteAdminAuditoria } from './servicos/administracaoAuditoria'
 import { criarClienteAuditoria } from './servicos/auditoria'
 import { criarProvedorEmail } from './servicos/email/criarProvedorEmail'
 import type { ProvedorEmail } from './servicos/email/ProvedorEmail'
@@ -36,7 +37,14 @@ async function iniciar(): Promise<void> {
             : null
     if (!clienteAuditoria) console.warn('Aviso: auditoria desativada (defina AUDITORIA_URL e AUDITORIA_TOKEN_LEITURA).')
 
-    const app = criarApp(ambiente, armazenamento, provedorEmail, { cliente: clienteAuditoria })
+    // a gestão de chaves usa o token de administração, separado do de leitura
+    const clienteAdmin =
+        ambiente.AUDITORIA_URL && ambiente.AUDITORIA_TOKEN_ADMIN
+            ? criarClienteAdminAuditoria(ambiente.AUDITORIA_URL, ambiente.AUDITORIA_TOKEN_ADMIN)
+            : null
+    if (!clienteAdmin) console.warn('Aviso: gestão de chaves de auditoria desativada (defina AUDITORIA_URL e AUDITORIA_TOKEN_ADMIN).')
+
+    const app = criarApp(ambiente, armazenamento, provedorEmail, { cliente: clienteAuditoria, admin: clienteAdmin })
     app.listen(ambiente.PORTA, () => {
         console.log(`API do portfólio em execução na porta ${ambiente.PORTA}`)
     })
