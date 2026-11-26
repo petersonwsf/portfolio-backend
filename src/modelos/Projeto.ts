@@ -10,6 +10,8 @@ export interface IProjeto {
     imagens: string[]
     urlCodigo?: string
     urlPagina?: string
+    /** Código da aplicação no serviço de auditoria (filtra os logs deste projeto). */
+    codigoAplicacao?: string
 }
 
 const esquemaProjeto = new Schema<IProjeto>(
@@ -22,6 +24,7 @@ const esquemaProjeto = new Schema<IProjeto>(
         imagens: { type: [String], default: [] },
         urlCodigo: { type: String, trim: true },
         urlPagina: { type: String, trim: true },
+        codigoAplicacao: { type: String, trim: true, lowercase: true },
     },
     opcoesEsquema
 )
