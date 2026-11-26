@@ -2,6 +2,7 @@ import { criarApp } from './app'
 import { conectarBanco } from './config/banco'
 import { carregarAmbiente } from './config/env'
 import { criarArmazenamentoS3 } from './servicos/armazenamento'
+import { criarClienteAuditoria } from './servicos/auditoria'
 import { criarProvedorEmail } from './servicos/email/criarProvedorEmail'
 import type { ProvedorEmail } from './servicos/email/ProvedorEmail'
 
@@ -28,7 +29,14 @@ async function iniciar(): Promise<void> {
         console.warn('Aviso: envio de e-mail desativado.', erro instanceof Error ? erro.message : erro)
     }
 
-    const app = criarApp(ambiente, armazenamento, provedorEmail)
+    // o serviço de auditoria é opcional: sem URL e token, a aba Auditoria responde 503
+    const clienteAuditoria =
+        ambiente.AUDITORIA_URL && ambiente.AUDITORIA_TOKEN_LEITURA
+            ? criarClienteAuditoria(ambiente.AUDITORIA_URL, ambiente.AUDITORIA_TOKEN_LEITURA)
+            : null
+    if (!clienteAuditoria) console.warn('Aviso: auditoria desativada (defina AUDITORIA_URL e AUDITORIA_TOKEN_LEITURA).')
+
+    const app = criarApp(ambiente, armazenamento, provedorEmail, { cliente: clienteAuditoria })
     app.listen(ambiente.PORTA, () => {
         console.log(`API do portfólio em execução na porta ${ambiente.PORTA}`)
     })

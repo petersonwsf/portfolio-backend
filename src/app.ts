@@ -8,6 +8,7 @@ import { rotaNaoEncontrada, tratarErros } from './middlewares/tratarErros'
 import { Experiencia } from './modelos/Experiencia'
 import { Habilidade } from './modelos/Habilidade'
 import { Projeto } from './modelos/Projeto'
+import { criarRotasAuditoria, type DependenciasAuditoria } from './rotas/auditoria'
 import { criarRotasAutenticacao } from './rotas/autenticacao'
 import { criarRotasContato } from './rotas/contato'
 import { criarRotasCrud } from './rotas/criarRotasCrud'
@@ -23,7 +24,8 @@ const POPULAR_TECNOLOGIAS = { caminho: 'tecnologias', selecionar: 'nome categori
 export function criarApp(
     ambiente: Ambiente,
     armazenamento: Armazenamento,
-    provedorEmail: ProvedorEmail | null = null
+    provedorEmail: ProvedorEmail | null = null,
+    auditoria: DependenciasAuditoria = { cliente: null }
 ): Express {
     const app = express()
     const autenticar = criarAutenticacao(ambiente.JWT_SEGREDO)
@@ -42,6 +44,7 @@ export function criarApp(
     app.use('/api/autenticacao', criarRotasAutenticacao(ambiente))
     app.use('/api/contato', criarRotasContato({ provedorEmail, emailDestino: ambiente.EMAIL_DESTINO }))
     app.use('/api/mensagens', criarRotasMensagens(autenticar))
+    app.use('/api/auditoria', criarRotasAuditoria(autenticar, auditoria))
     app.use('/api/uploads',criarRotasUploads(armazenamento, autenticar))
     app.use(
         '/api/projetos',
