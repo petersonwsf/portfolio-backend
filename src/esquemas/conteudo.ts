@@ -3,7 +3,19 @@ import { CATEGORIAS_HABILIDADE, NIVEIS_HABILIDADE } from '../modelos/Habilidade'
 
 const textoObrigatorio = (campo: string) => z.string().trim().min(1, `${campo} é obrigatório`).max(5000)
 const urlOpcional = z.union([z.url('URL inválida'), z.literal('')]).optional()
-const listaDeIds = z.array(z.string().regex(/^[a-f0-9]{24}$/i, 'Identificador inválido')).max(50).default([])
+// código da aplicação no serviço de auditoria; vazio = remover
+const codigoAplicacaoOpcional = z
+    .union([
+        z.literal(''),
+        z
+            .string()
+            .trim()
+            .toLowerCase()
+            .regex(/^[a-z0-9][a-z0-9_-]{1,39}$/, 'Use 2 a 40 caracteres: letras minúsculas, números, - ou _'),
+    ])
+    .optional()
+    .transform((valor) => valor || undefined)
+const listaDeIds =z.array(z.string().regex(/^[a-f0-9]{24}$/i, 'Identificador inválido')).max(50).default([])
 
 export const esquemaProjeto = z.object({
     nome: textoObrigatorio('Nome').max(120),
@@ -14,6 +26,7 @@ export const esquemaProjeto = z.object({
     imagens: z.array(z.string().trim().min(1).max(2000)).max(30).default([]),
     urlCodigo: urlOpcional,
     urlPagina: urlOpcional,
+    codigoAplicacao: codigoAplicacaoOpcional,
 })
 
 export const esquemaExperiencia = z

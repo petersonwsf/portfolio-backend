@@ -5,6 +5,10 @@ import { z } from 'zod'
 // o .env fica na raiz do projeto (ao lado do docker-compose.yml)
 dotenv.config({ path: path.resolve(__dirname, '..', '..', '.env') })
 
+/** Trata variável vazia no .env (`NOME=`) como ausente. */
+const vazioComoAusente = <T extends z.ZodType>(esquema: T) =>
+    z.preprocess((valor) => (valor === '' ? undefined : valor), esquema)
+
 const esquemaEnv = z.object({
     PORTA: z.coerce.number().int().positive().default(3333),
     MONGODB_URI: z.string().min(1, 'MONGODB_URI é obrigatória'),
@@ -32,6 +36,9 @@ const esquemaEnv = z.object({
         .transform((valor) => valor === 'true'),
     SMTP_USUARIO: z.string().min(1).optional(),
     SMTP_SENHA: z.string().min(1).optional(),
+    // serviço central de auditoria (opcionais: sem eles a aba Auditoria responde 503)
+    AUDITORIA_URL: vazioComoAusente(z.url('AUDITORIA_URL deve ser uma URL').optional()),
+    AUDITORIA_TOKEN_LEITURA: vazioComoAusente(z.string().min(32, 'AUDITORIA_TOKEN_LEITURA deve ter ao menos 32 caracteres').optional()),
 })
 
 export type Ambiente = z.infer<typeof esquemaEnv>

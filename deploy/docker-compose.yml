@@ -9,3 +9,12 @@ services:
       # publicado só em localhost: o Caddy da VPS faz o reverse_proxy para esta porta.
       # (se o seu Caddy roda em container, troque por uma rede Docker compartilhada)
       - "127.0.0.1:3333:3333"
+    # Alcança o serviço de auditoria (http://audit-service:8090) pela rede compartilhada.
+    # Crie-a uma vez na VPS: `docker network create audit-net` (o compose do audit-service usa a mesma).
+    networks:
+      - default
+      - audit-net
+
+networks:
+  audit-net:
+    external: true
