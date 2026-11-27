@@ -10,6 +10,7 @@ import { Habilidade } from './modelos/Habilidade'
 import { Projeto } from './modelos/Projeto'
 import { criarRotasAuditoria, type DependenciasAuditoria } from './rotas/auditoria'
 import { criarRotasAutenticacao } from './rotas/autenticacao'
+import { criarRotasChavesAuditoria } from './rotas/chavesAuditoria'
 import { criarRotasContato } from './rotas/contato'
 import { criarRotasCrud } from './rotas/criarRotasCrud'
 import { criarRotasMensagens } from './rotas/mensagens'
@@ -44,6 +45,7 @@ export function criarApp(
     app.use('/api/autenticacao', criarRotasAutenticacao(ambiente))
     app.use('/api/contato', criarRotasContato({ provedorEmail, emailDestino: ambiente.EMAIL_DESTINO }))
     app.use('/api/mensagens', criarRotasMensagens(autenticar))
+    app.use('/api/auditoria/aplicacoes', criarRotasChavesAuditoria(autenticar, auditoria.admin ?? null))
     app.use('/api/auditoria', criarRotasAuditoria(autenticar, auditoria))
     app.use('/api/uploads',criarRotasUploads(armazenamento, autenticar))
     app.use(
